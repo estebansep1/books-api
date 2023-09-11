@@ -14,7 +14,7 @@ mongoose.connect(process.env.MONGO_URI, {
 })
 .then(() => {console.log('Connected to mongo: ', process.env.MONGO_URI) })
 
-//MIDDLEWEAR
+//MIDDLEWARE
 app.use(cors())
 app.use(express.json())
 
