@@ -39,13 +39,39 @@ books.get('/seed', (req, res) => {
         }))
 })
 
-//GET ALL BOOKS
+// GET ALL BOOKS
 books.get('/', (req, res) => {
   Book.find()
     .then((books) => {
       res.status(200).json(books)
     })
+    .catch((error) => {
+      res.status(404)
+    })
 })
 
+// GET a single book by ID
+books.get('/:id', (req, res) => {
+  const bookId = req.params.id;
+  Book.findById(bookId)
+    .then((book) => {
+      res.status(200).json(book);
+    })
+    .catch((error) => {
+      res.status(500).json({ error: 'An error occurred while fetching book data' });
+    });
+});
+
+// UPDATE BOOK
+books.put('/:id', (req, res) => {
+  const bookId = req.params.id
+  Book.findByIdAndUpdate(bookId, req.body, { new: true })
+  .then((book) => {
+    res.status(200).json(book)
+  })
+  .catch((error) => {
+    res.status(500).json({ error: 'An error occurred trying to update book' });
+  });
+});
 
 module.exports = books;
