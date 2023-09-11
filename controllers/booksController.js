@@ -46,14 +46,13 @@ books.get('/', (req, res) => {
       res.status(200).json(books)
     })
     .catch((error) => {
-      res.status(404)
+      res.status(500).json({ error: 'An error occured trying to retrieve all books data'})
     })
 })
 
 // GET a single book by ID
 books.get('/:id', (req, res) => {
-  const bookId = req.params.id;
-  Book.findById(bookId)
+  Book.findById(req.params.id)
     .then((book) => {
       res.status(200).json(book);
     })
@@ -64,8 +63,7 @@ books.get('/:id', (req, res) => {
 
 // UPDATE BOOK
 books.put('/:id', (req, res) => {
-  const bookId = req.params.id
-  Book.findByIdAndUpdate(bookId, req.body, { new: true })
+  Book.findByIdAndUpdate(req.params.id, req.body, { new: true })
   .then((book) => {
     res.status(200).json(book)
   })
@@ -74,4 +72,26 @@ books.put('/:id', (req, res) => {
   });
 });
  
+// DELETE ROUTE
+books.delete('/:id', (req,res) => {
+  Book.findByIdAndDelete(req.params.id)
+  .then((book) => {
+    res.status(200).json({ message: "Book successfully deleted"})
+  })
+  .catch((error) => {
+    res.status(500).json ({ error: 'An error occured trying to delete book'})
+  })
+})
+
+// CREATE BOOK
+books.post('/', (req, res) => {
+  Book.create(req.body)
+  .then((book) => {
+    res.status(200).json ({ message: 'Book successfully created'})
+  })
+  .catch((error) => {
+    res.status(500).json ({ error: 'An error occured trying to create a book'})
+  })
+})
+
 module.exports = books;
